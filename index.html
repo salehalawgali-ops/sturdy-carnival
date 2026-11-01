@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة الخطة الدراسية - كلية الطب جامعة بنغازي</title>
+    
+    <!-- استدعاء خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- استدعاء مكتبة الأيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* لوحة ألوان طبية فخمة */
+            --primary: #0c3b5e;
+            --primary-light: #176b9e;
+            --secondary: #0d9488;
+            --accent: #d97706;
+            --bg-body: #f0f4f8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --border: #cbd5e1; /* لون حدود أوضح */
+            
+            /* ألوان الشارات */
+            --partial: #f59e0b; 
+            --final1: #10b981; 
+            --final2: #ef4444; 
+            --lab: #8b5cf6;
+            
+            /* ألوان الروتة */
+            --med: #3b82f6; 
+            --surg: #10b981; 
+            --ped: #f59e0b; 
+            --derma: #8b5cf6; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding-bottom: 4rem;
+            font-size: 1.1rem; /* تكبير الخط الأساسي */
+        }
+
+        /* ===== الواجهة العلوية ===== */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 4rem 1rem 5rem 1rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 8px solid var(--accent);
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .header-title p {
+            font-size: 1.4rem;
+            color: #bae6fd;
+            font-weight: 700;
+        }
+
+        .year-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+            padding: 0.6rem 2rem;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* ===== شعار المصمم ===== */
+        .designer-badge {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin-top: 3rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.8);
+            border: 3px solid var(--accent);
+            position: relative;
+            z-index: 10;
+            transform: translateY(60%);
+            transition: transform 0.3s ease;
+        }
+
+        .designer-badge:hover {
+            transform: translateY(55%) scale(1.03);
+        }
+
+        .designer-badge .icon-box {
+            background: linear-gradient(135deg, var(--accent), #b45309);
+            color: var(--white);
+            width: 65px;
+            height: 65px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.5);
+        }
+
+        .designer-badge .text {
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .designer-badge .text span {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .designer-badge .text strong {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* ===== الحاوية الرئيسية ===== */
+        .container {
+            max-width: 1200px;
+            margin: 6rem auto 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ===== تنسيق القوائم المنسدلة ===== */
+        .accordion-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .accordion-item {
+            background: var(--white);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .accordion-item:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .accordion-header {
+            width: 100%;
+            background: var(--white);
+            border: none;
+            padding: 1.4rem 1.8rem;
+            text-align: right;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-right: 6px solid transparent;
+        }
+
+        .accordion-header:hover {
+            background: #f8fafc;
+            border-right-color: var(--secondary);
+        }
+
+        .accordion-header.active {
+            background: #f0fdf4;
+            border-right-color: var(--accent);
+            color: var(--primary-light);
+        }
+
+        .header-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .phase-icon {
+            background: var(--primary-light);
+            color: var(--white);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+        }
+
+        .accordion-header.active .phase-icon {
+            background: var(--accent);
+        }
+
+        .arrow-icon {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .accordion-header.active .arrow-icon {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--white);
+        }
+
+        .accordion-content.is-open {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion-inner {
+            overflow: hidden;
+        }
+
+        .accordion-inner .accordion-group {
+            padding: 0 1.2rem 1.2rem 1.2rem;
+            gap: 1rem;
+        }
+
+        .accordion-inner .accordion-item {
+            box-shadow: none;
+            border: 1px solid var(--border);
+            background: #fcfcfc;
+        }
+
+        .accordion-inner .accordion-header {
+            font-size: 1.15rem;
+            color: var(--text-main);
+            padding: 1.2rem 1.8rem;
+            background: transparent;
+        }
+
+        .accordion-inner .accordion-header.active {
+            background: #f1f5f9;
+            border-right-color: var(--primary);
+        }
+
+        .exam-type-btn {
+            font-size: 1.1rem !important;
+            padding: 1rem 1.8rem !important;
+            font-weight: 700 !important;
+            border-right: 4px solid transparent !important;
+        }
+
+        .exam-type-btn:hover {
+            border-right-color: var(--secondary) !important;
+        }
+
+        .exam-type-btn.active {
+            background: #f8fafc !important;
+            border-right-color: var(--accent) !important;
+        }
+
+        .exam-type-btn i {
+            color: var(--primary-light);
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* ===== لوحة المعلومات الموجزة ===== */
+        .summary-dashboard {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin: 1rem 1.8rem 1.5rem 1.8rem;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .dash-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--white);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .dash-item i {
+            color: var(--white);
+            font-size: 1.4rem;
+            background: var(--secondary);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .dash-item .dash-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dash-item .dash-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .dash-item .dash-value {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* ===== الجداول ===== */
+        .table-wrap {
+            padding: 1rem 1.8rem 1.8rem 1.8rem;
+            background: #fcfcfc;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 1rem 1.2rem;
+            text-align: right; /* محاذاة النص لليمين أفضل للقراءة */
+            font-size: 1.1rem; /* تكبير خط الجدول */
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            border-left: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        th {
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 800;
+            text-align: center;
+            font-size: 1.15rem;
+        }
+
+        td:first-child {
+            font-weight: 800;
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* تنسيق أيقونات المواد */
+        .subject-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            margin-left: 10px;
+            font-size: 1.1rem;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* ألوان المواد */
+        .icon-anatomy { background: #3b82f6; } /* أزرق */
+        .icon-physio { background: #ef4444; } /* أحمر */
+        .icon-biochem { background: #10b981; } /* أخضر */
+        .icon-histology { background: #8b5cf6; } /* بنفسجي */
+        .icon-pathology { background: #f59e0b; } /* برتقالي */
+        .icon-micro { background: #06b6d4; } /* سماوي */
+        .icon-pharma { background: #d946ef; } /* وردي */
+        .icon-parasite { background: #84cc16; } /* ليموني */
+
+        /* ألوان أقسام الروتة */
+        .rot-med { background-color: #dbeafe; color: #1e40af; font-weight: 800; }
+        .rot-surg { background-color: #d1fae5; color: #065f46; font-weight: 800; }
+        .rot-ped { background-color: #fef3c7; color: #92400e; font-weight: 800; }
+        .rot-derma { background-color: #ede9fe; color: #5b21b6; font-weight: 800; }
+
+        .rot-icon {
+            margin-left: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* الشارات (Badges) */
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+        .bg-partial { background: var(--partial); }
+        .bg-final1 { background: var(--final1); }
+        .bg-final2 { background: var(--final2); }
+        .bg-lab { background: var(--lab); }
+
+        /* التنبيهات والملاحظات */
+        .note {
+            background: #fffbeb;
+            color: #92400e;
+            padding: 1.2rem 1.8rem;
+            border-right: 6px solid var(--accent);
+            border-radius: 10px;
+            margin: 1.5rem 1.8rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .note i {
+            margin-top: 3px;
+            font-size: 1.4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { font-size: 1rem; }
+            .header-title h1 { font-size: 1.8rem; }
+            .header-title p { font-size: 1.1rem; }
+            .designer-badge { padding: 12px 25px; gap: 15px; }
+            .designer-badge .text strong { font-size: 1.2rem; }
+            .designer-badge .text span { font-size: 0.85rem; }
+            .designer-badge .icon-box { width: 50px; height: 50px; font-size: 1.4rem; }
+            
+            .accordion-header { font-size: 1.1rem; padding: 1.2rem 1rem; }
+            .accordion-inner .accordion-header { font-size: 1rem; padding: 1rem 1.2rem; }
+            .table-wrap { padding: 0.5rem; }
+            th, td { padding: 0.8rem 0.6rem; font-size: 0.95rem; }
+            .summary-dashboard { margin: 0.5rem 1rem; padding: 1rem; }
+            .dash-item i { width: 35px; height: 35px; font-size: 1.1rem; }
+            .subject-icon { width: 26px; height: 26px; font-size: 0.9rem; margin-left: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="header-title">
+            <h1>جامعة بنغازي - كلية الطب البشري</h1>
+            <p>منظومة الخطة الدراسية لجميع سنوات كلية الطب</p>
+            <span class="year-tag"><i class="far fa-calendar-alt"></i> العام الدراسي 2026 - 2027</span>
+        </div>
+        
+        <!-- شعار المصمم -->
+        <div class="designer-badge">
+            <div class="icon-box"><i class="fas fa-award"></i></div>
+            <div class="text">
+                <span>إعداد وتصميم المنظومة</span>
+                <strong>د. صالح الوجلي</strong>
+                <span>رئيس قسم الدراسة والامتحانات</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="accordion-group">
+
+        <!-- ================= المرحلة التمهيدية ================= -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="header-title-wrap">
+                    <div class="phase-icon"><i class="fas fa-school"></i></div>
+                    <span>المرحلة التمهيدية (إعدادي طب)</span>
+                </div>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i>
+                        <div>كل ما يتعلق بهذه المرحلة من دراسة وامتحانات يُشرف عليه قسم الدراسة والامتحانات بكلية العلوم - جامعة بنغازي.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= المرحلة الأولى ================= -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="header-title-wrap">
+                    <div class="phase-icon"><i class="fas fa-book-medical"></i></div>
+                    <span>المرحلة الأولى (قبل السريرية التمهيدية)</span>
+                </div>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <div class="accordion-group">
+                        
+                        <!-- السنة الأولى -->
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span>السنة الأولى (الدفعة 54)</span>
+                                <i class="fas fa-chevron-down arrow-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="accordion-inner">
+                                    
+                                    <div class="summary-dashboard">
+                                        <div class="dash-item">
+                                            <i class="far fa-clock"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">مدة الدراسة</span>
+                                                <span class="dash-value">7 أشهر</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-check"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">بداية الدراسة</span>
+                                                <span class="dash-value">نوفمبر 2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-times"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">نهاية الدراسة</span>
+                                                <span class="dash-value">مايو 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-pen"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">امتحانات الجزئي</span>
+                                                <span class="dash-value">يناير - فبراير 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الأول</span>
+                                                <span class="dash-value">نهاية مايو 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-redo-alt"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الثاني</span>
+                                                <span class="dash-value">منتصف يوليو 2027</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-group">
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-pen"></i> جدول الامتحانات الجزئية</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-anatomy"><i class="fas fa-bone"></i></span> علم التشريح</td><td>الأحد</td><td>2027-01-24</td></tr>
+                                                                <tr><td><span class="subject-icon icon-physio"><i class="fas fa-heart-pulse"></i></span> علم وظائف الأعضاء</td><td>الأربعاء</td><td>2027-01-27</td></tr>
+                                                                <tr><td><span class="subject-icon icon-biochem"><i class="fas fa-flask"></i></span> علم الكيمياء الحيوية</td><td>الأحد</td><td>2027-01-31</td></tr>
+                                                                <tr><td><span class="subject-icon icon-histology"><i class="fas fa-dna"></i></span> علم الأنسجة</td><td>الأربعاء</td><td>2027-02-03</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-check-circle"></i> الامتحانات النهائية - الدور الأول</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-anatomy"><i class="fas fa-bone"></i></span> علم التشريح</td><td>السبت</td><td>2027-05-29</td></tr>
+                                                                <tr><td><span class="subject-icon icon-physio"><i class="fas fa-heart-pulse"></i></span> علم وظائف الأعضاء</td><td>السبت</td><td>2027-06-05</td></tr>
+                                                                <tr><td><span class="subject-icon icon-biochem"><i class="fas fa-flask"></i></span> علم الكيمياء الحيوية</td><td>السبت</td><td>2027-06-12</td></tr>
+                                                                <tr><td><span class="subject-icon icon-histology"><i class="fas fa-dna"></i></span> علم الأنسجة</td><td>السبت</td><td>2027-06-19</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-redo-alt"></i> الامتحانات النهائية - الدور الثاني</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-anatomy"><i class="fas fa-bone"></i></span> علم التشريح</td><td>الخميس</td><td>2027-07-15</td></tr>
+                                                                <tr><td><span class="subject-icon icon-physio"><i class="fas fa-heart-pulse"></i></span> علم وظائف الأعضاء</td><td>الخميس</td><td>2027-07-22</td></tr>
+                                                                <tr><td><span class="subject-icon icon-biochem"><i class="fas fa-flask"></i></span> علم الكيمياء الحيوية</td><td>الخميس</td><td>2027-07-29</td></tr>
+                                                                <tr><td><span class="subject-icon icon-histology"><i class="fas fa-dna"></i></span> علم الأنسجة</td><td>الخميس</td><td>2027-08-05</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- السنة الثانية -->
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span>السنة الثانية (الدفعة 53)</span>
+                                <i class="fas fa-chevron-down arrow-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="accordion-inner">
+                                    
+                                    <div class="summary-dashboard">
+                                        <div class="dash-item">
+                                            <i class="far fa-clock"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">مدة الدراسة</span>
+                                                <span class="dash-value">7 أشهر</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-check"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">بداية الدراسة</span>
+                                                <span class="dash-value">نوفمبر 2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-times"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">نهاية الدراسة</span>
+                                                <span class="dash-value">مايو 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-pen"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">امتحانات الجزئي</span>
+                                                <span class="dash-value">يناير - فبراير 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الأول</span>
+                                                <span class="dash-value">يونيو 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-redo-alt"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الثاني</span>
+                                                <span class="dash-value">منتصف يوليو 2027</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-group">
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-pen"></i> جدول الامتحانات الجزئية</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-anatomy"><i class="fas fa-bone"></i></span> علم التشريح</td><td>الاثنين</td><td>2027-01-25</td></tr>
+                                                                <tr><td><span class="subject-icon icon-physio"><i class="fas fa-heart-pulse"></i></span> علم وظائف الأعضاء</td><td>الخميس</td><td>2027-01-28</td></tr>
+                                                                <tr><td><span class="subject-icon icon-biochem"><i class="fas fa-flask"></i></span> علم الكيمياء الحيوية</td><td>الاثنين</td><td>2027-02-01</td></tr>
+                                                                <tr><td><span class="subject-icon icon-histology"><i class="fas fa-dna"></i></span> علم الأنسجة</td><td>الخميس</td><td>2027-02-04</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-check-circle"></i> الامتحانات النهائية - الدور الأول</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-anatomy"><i class="fas fa-bone"></i></span> علم التشريح</td><td>الأربعاء</td><td>2027-06-02</td></tr>
+                                                                <tr><td><span class="subject-icon icon-physio"><i class="fas fa-heart-pulse"></i></span> علم وظائف الأعضاء</td><td>الأربعاء</td><td>2027-06-09</td></tr>
+                                                                <tr><td><span class="subject-icon icon-biochem"><i class="fas fa-flask"></i></span> علم الكيمياء الحيوية</td><td>الأربعاء</td><td>2027-06-16</td></tr>
+                                                                <tr><td><span class="subject-icon icon-histology"><i class="fas fa-dna"></i></span> علم الأنسجة</td><td>الأربعاء</td><td>2027-06-23</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-redo-alt"></i> الامتحانات النهائية - الدور الثاني</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-anatomy"><i class="fas fa-bone"></i></span> علم التشريح</td><td>الاثنين</td><td>2027-07-19</td></tr>
+                                                                <tr><td><span class="subject-icon icon-physio"><i class="fas fa-heart-pulse"></i></span> علم وظائف الأعضاء</td><td>الاثنين</td><td>2027-07-26</td></tr>
+                                                                <tr><td><span class="subject-icon icon-biochem"><i class="fas fa-flask"></i></span> علم الكيمياء الحيوية</td><td>الاثنين</td><td>2027-08-02</td></tr>
+                                                                <tr><td><span class="subject-icon icon-histology"><i class="fas fa-dna"></i></span> علم الأنسجة</td><td>الاثنين</td><td>2027-08-08</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= المرحلة الثانية ================= -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="header-title-wrap">
+                    <div class="phase-icon"><i class="fas fa-microscope"></i></div>
+                    <span>المرحلة الثانية (قبل السريرية المتقدمة)</span>
+                </div>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <div class="accordion-group">
+                        
+                        <!-- السنة الثالثة -->
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span>السنة الثالثة (الدفعة 52)</span>
+                                <i class="fas fa-chevron-down arrow-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="accordion-inner">
+                                    
+                                    <div class="summary-dashboard">
+                                        <div class="dash-item">
+                                            <i class="far fa-clock"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">مدة الدراسة</span>
+                                                <span class="dash-value">7 أشهر</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-check"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">بداية الدراسة</span>
+                                                <span class="dash-value">نوفمبر 2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-times"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">نهاية الدراسة</span>
+                                                <span class="dash-value">مايو 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-pen"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">امتحانات الجزئي</span>
+                                                <span class="dash-value">يناير ومارس 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الأول</span>
+                                                <span class="dash-value">نهاية مايو 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-redo-alt"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الثاني</span>
+                                                <span class="dash-value">منتصف أغسطس 2027</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-group">
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-pen"></i> جداول الامتحانات الجزئية</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>الامتحان</th><th>المادة</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td rowspan="4">الجزئي الأول</td><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض</td><td>السبت</td><td>2027-01-09</td></tr>
+                                                                <tr><td><span class="subject-icon icon-micro"><i class="fas fa-bacteria"></i></span> علم الجراثيم</td><td>السبت</td><td>2027-01-16</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية</td><td>السبت</td><td>2027-01-23</td></tr>
+                                                                <tr><td><span class="subject-icon icon-parasite"><i class="fas fa-bug"></i></span> علم الطفيليات</td><td>السبت</td><td>2027-01-30</td></tr>
+                                                                <tr><td rowspan="3">الجزئي الثاني</td><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض</td><td>الاثنين</td><td>2027-03-15</td></tr>
+                                                                <tr><td><span class="subject-icon icon-micro"><i class="fas fa-bacteria"></i></span> علم الجراثيم</td><td>الاثنين</td><td>2027-03-22</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية</td><td>الاثنين</td><td>2027-03-29</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-check-circle"></i> الامتحانات النهائية - الدور الأول</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>النوع</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-parasite"><i class="fas fa-bug"></i></span> علم الطفيليات</td><td><span class="badge bg-lab">معمل</span></td><td>الاثنين</td><td>2027-04-19</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية</td><td><span class="badge bg-lab">معمل</span></td><td>السبت</td><td>2027-05-01</td></tr>
+                                                                <tr><td><span class="subject-icon icon-micro"><i class="fas fa-bacteria"></i></span> علم الجراثيم</td><td><span class="badge bg-lab">معمل</span></td><td>الاثنين</td><td>2027-05-10</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض</td><td><span class="badge bg-lab">معمل</span></td><td>الأربعاء</td><td>2027-05-26</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض - الورقة 1</td><td><span class="badge bg-final1">نظري</span></td><td>الاثنين</td><td>2027-06-07</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض - الورقة 2</td><td><span class="badge bg-final1">نظري</span></td><td>الثلاثاء</td><td>2027-06-08</td></tr>
+                                                                <tr><td><span class="subject-icon icon-parasite"><i class="fas fa-bug"></i></span> علم الطفيليات</td><td><span class="badge bg-final1">نظري</span></td><td>الثلاثاء</td><td>2027-06-22</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية - الورقة 1</td><td><span class="badge bg-final1">نظري</span></td><td>الاثنين</td><td>2027-07-05</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية - الورقة 2</td><td><span class="badge bg-final1">نظري</span></td><td>الثلاثاء</td><td>2027-07-06</td></tr>
+                                                                <tr><td><span class="subject-icon icon-micro"><i class="fas fa-bacteria"></i></span> علم الجراثيم</td><td><span class="badge bg-final1">نظري</span></td><td>الأحد</td><td>2027-07-25</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-redo-alt"></i> الامتحانات النهائية - الدور الثاني</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>النوع</th><th>اليوم</th><th>الموافق</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض - الورقة 1</td><td><span class="badge bg-final2">نظري</span></td><td>الاثنين</td><td>2027-08-16</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض - الورقة 2</td><td><span class="badge bg-final2">نظري</span></td><td>الثلاثاء</td><td>2027-08-17</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pathology"><i class="fas fa-disease"></i></span> علم الأمراض</td><td><span class="badge bg-lab">معمل</span></td><td>الخميس</td><td>2027-08-19</td></tr>
+                                                                <tr><td><span class="subject-icon icon-parasite"><i class="fas fa-bug"></i></span> علم الطفيليات</td><td><span class="badge bg-final2">نظري</span></td><td>الخميس</td><td>2027-08-26</td></tr>
+                                                                <tr><td><span class="subject-icon icon-parasite"><i class="fas fa-bug"></i></span> علم الطفيليات</td><td><span class="badge bg-lab">معمل</span></td><td>السبت</td><td>2027-08-28</td></tr>
+                                                                <tr><td><span class="subject-icon icon-micro"><i class="fas fa-bacteria"></i></span> علم الجراثيم - الورقة</td><td><span class="badge bg-final2">نظري</span></td><td>الاثنين</td><td>2027-09-06</td></tr>
+                                                                <tr><td><span class="subject-icon icon-micro"><i class="fas fa-bacteria"></i></span> علم الجراثيم</td><td><span class="badge bg-lab">معمل</span></td><td>الثلاثاء</td><td>2027-09-07</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية - الورقة 1</td><td><span class="badge bg-final2">نظري</span></td><td>الاثنين</td><td>2027-09-20</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية - الورقة 2</td><td><span class="badge bg-final2">نظري</span></td><td>الثلاثاء</td><td>2027-09-21</td></tr>
+                                                                <tr><td><span class="subject-icon icon-pharma"><i class="fas fa-pills"></i></span> علم الأدوية</td><td><span class="badge bg-lab">معمل</span></td><td>الخميس</td><td>2027-09-23</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= المرحلة الثالثة ================= -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="header-title-wrap">
+                    <div class="phase-icon"><i class="fas fa-hospital-user"></i></div>
+                    <span>المرحلة الثالثة (المرحلة السريرية)</span>
+                </div>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <div class="accordion-group">
+                        
+                        <!-- السنة الرابعة الجديدة -->
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span>السنة الرابعة الجديدة (الدفعة 51)</span>
+                                <i class="fas fa-chevron-down arrow-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="accordion-inner">
+                                    
+                                    <div class="summary-dashboard">
+                                        <div class="dash-item">
+                                            <i class="far fa-clock"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">مدة الدراسة</span>
+                                                <span class="dash-value">6 أشهر</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-check"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">بداية الدراسة</span>
+                                                <span class="dash-value">ديسمبر 2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-times"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">نهاية الدراسة</span>
+                                                <span class="dash-value">مايو 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-pen"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الامتحانات الجزئية</span>
+                                                <span class="dash-value">الأسبوع الأخير من فبراير ومايو</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-book"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">المواد</span>
+                                                <span class="dash-value">الباطنة - الجراحة</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-wrap" style="padding-top: 0;">
+                                        <table>
+                                            <thead><tr><th>المدة الزمنية</th><th>مجموعة E</th><th>مجموعة F</th></tr></thead>
+                                            <tbody>
+                                                <tr><td>2026-12-01 إلى 2027-02-28</td><td class="rot-med"><i class="fas fa-stethoscope rot-icon"></i> الباطنة</td><td class="rot-surg"><i class="fas fa-syringe rot-icon"></i> الجراحة</td></tr>
+                                                <tr><td>2027-03-01 إلى 2027-05-31</td><td class="rot-surg"><i class="fas fa-syringe rot-icon"></i> الجراحة</td><td class="rot-med"><i class="fas fa-stethoscope rot-icon"></i> الباطنة</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- السنة الرابعة القديمة -->
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span>السنة الرابعة القديمة (الدفعة 50)</span>
+                                <i class="fas fa-chevron-down arrow-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="accordion-inner">
+                                    
+                                    <div class="summary-dashboard">
+                                        <div class="dash-item">
+                                            <i class="far fa-clock"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">مدة الدراسة</span>
+                                                <span class="dash-value">6 أشهر</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-check"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">بداية الدراسة</span>
+                                                <span class="dash-value">يوليو 2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-times"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">نهاية الدراسة</span>
+                                                <span class="dash-value">ديسمبر 2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الأول</span>
+                                                <span class="dash-value">مارس 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-redo-alt"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الثاني</span>
+                                                <span class="dash-value">يوليو 2027</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-group">
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-check-circle"></i> الامتحانات النهائية - الدور الأول</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>الامتحان</th><th>اليوم/التاريخ</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td rowspan="2"><i class="fas fa-baby rot-icon" style="color:#e83e8c;"></i> النساء والتوليد</td><td>الورقة الأولى + OSPE</td><td>الخميس 2027-03-18</td></tr>
+                                                                <tr><td>العملي</td><td>20 إلى 25 مارس 2027</td></tr>
+                                                                <tr><td rowspan="2"><i class="fas fa-x-ray rot-icon" style="color:#17a2b8;"></i> الأشعة</td><td>الورقة الأولى + OSPE</td><td>السبت 2027-04-03</td></tr>
+                                                                <tr><td>العملي</td><td>4 إلى 10 أبريل 2027</td></tr>
+                                                                <tr><td rowspan="2"><i class="fas fa-eye rot-icon" style="color:#007bff;"></i> العيون</td><td>الورقة الأولى</td><td>السبت 2027-04-17</td></tr>
+                                                                <tr><td>العملي</td><td>18 إلى 24 أبريل 2027</td></tr>
+                                                                <tr><td rowspan="2"><i class="fas fa-user-shield rot-icon" style="color:#6c757d;"></i> الطب الشرعي</td><td>الورقة الأولى</td><td>الأحد 2027-05-02</td></tr>
+                                                                <tr><td>العملي</td><td>3 إلى 9 مايو 2027</td></tr>
+                                                                <tr><td rowspan="3"><i class="fas fa-house-medical rot-icon" style="color:#28a745;"></i> طب الأسرة والمجتمع</td><td>الورقة الأولى</td><td>الاثنين 2027-05-24</td></tr>
+                                                                <tr><td>الورقة الثانية</td><td>الثلاثاء 2027-05-25</td></tr>
+                                                                <tr><td>العملي</td><td>26 مايو إلى 1 يونيو 2027</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-redo-alt"></i> الامتحانات النهائية - الدور الثاني</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>الامتحان</th><th>اليوم/التاريخ</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td rowspan="2"><i class="fas fa-baby rot-icon" style="color:#e83e8c;"></i> النساء والتوليد</td><td>الورقة الأولى + OSPE</td><td>السبت 2027-07-10</td></tr>
+                                                                <tr><td>العملي</td><td>11 إلى 13 يوليو 2027</td></tr>
+                                                                <tr><td rowspan="2"><i class="fas fa-x-ray rot-icon" style="color:#17a2b8;"></i> الأشعة</td><td>الورقة الأولى</td><td>السبت 2027-07-17</td></tr>
+                                                                <tr><td>العملي</td><td>18 إلى 20 يوليو 2027</td></tr>
+                                                                <tr><td rowspan="2"><i class="fas fa-eye rot-icon" style="color:#007bff;"></i> العيون</td><td>الورقة الأولى</td><td>السبت 2027-07-24</td></tr>
+                                                                <tr><td>العملي</td><td>25 إلى 27 يوليو 2027</td></tr>
+                                                                <tr><td rowspan="3"><i class="fas fa-house-medical rot-icon" style="color:#28a745;"></i> طب الأسرة والمجتمع</td><td>الورقة الأولى</td><td>السبت 2027-07-31</td></tr>
+                                                                <tr><td>الورقة الثانية</td><td>الأحد 2027-08-01</td></tr>
+                                                                <tr><td>العملي</td><td>2 إلى 4 أغسطس 2027</td></tr>
+                                                                <tr><td rowspan="2"><i class="fas fa-user-shield rot-icon" style="color:#6c757d;"></i> الطب الشرعي</td><td>الورقة الأولى</td><td>الأحد 2027-08-08</td></tr>
+                                                                <tr><td>العملي</td><td>9 إلى 11 أغسطس 2027</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- السنة الخامسة -->
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span>السنة الخامسة (الدفعة 49)</span>
+                                <i class="fas fa-chevron-down arrow-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="accordion-inner">
+                                    
+                                    <div class="summary-dashboard">
+                                        <div class="dash-item">
+                                            <i class="far fa-clock"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">مدة الدراسة</span>
+                                                <span class="dash-value">12 شهراً</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-check"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">بداية الدراسة</span>
+                                                <span class="dash-value">ديسمبر 2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="far fa-calendar-times"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">نهاية الدراسة</span>
+                                                <span class="dash-value">نوفمبر 2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الأول</span>
+                                                <span class="dash-value">يناير 2028</span>
+                                            </div>
+                                        </div>
+                                        <div class="dash-item">
+                                            <i class="fas fa-redo-alt"></i>
+                                            <div class="dash-text">
+                                                <span class="dash-label">الدور الثاني</span>
+                                                <span class="dash-value">يونيو 2028</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-group">
+                                        <!-- الروتة (التوزيع السريري) -->
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-calendar-alt"></i> جدول الروتة (الفترات الربع سنوية)</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>الفترة (3 أشهر)</th>
+                                                                    <th>مجموعة A</th>
+                                                                    <th>مجموعة B</th>
+                                                                    <th>مجموعة C</th>
+                                                                    <th>مجموعة D</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>ديسمبر 2026 - فبراير 2027</td>
+                                                                    <td class="rot-med"><i class="fas fa-stethoscope rot-icon"></i> الباطنة</td>
+                                                                    <td class="rot-surg"><i class="fas fa-syringe rot-icon"></i> الجراحة</td>
+                                                                    <td class="rot-ped"><i class="fas fa-baby rot-icon"></i> الأطفال</td>
+                                                                    <td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> الجلدية-النفسية-الأنف</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>مارس 2027 - مايو 2027</td>
+                                                                    <td class="rot-surg"><i class="fas fa-syringe rot-icon"></i> الجراحة</td>
+                                                                    <td class="rot-ped"><i class="fas fa-baby rot-icon"></i> الأطفال</td>
+                                                                    <td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> الجلدية-النفسية-الأنف</td>
+                                                                    <td class="rot-med"><i class="fas fa-stethoscope rot-icon"></i> الباطنة</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>يونيو 2027 - أغسطس 2027</td>
+                                                                    <td class="rot-ped"><i class="fas fa-baby rot-icon"></i> الأطفال</td>
+                                                                    <td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> الجلدية-النفسية-الأنف</td>
+                                                                    <td class="rot-med"><i class="fas fa-stethoscope rot-icon"></i> الباطنة</td>
+                                                                    <td class="rot-surg"><i class="fas fa-syringe rot-icon"></i> الجراحة</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>سبتمبر 2027 - نوفمبر 2027</td>
+                                                                    <td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> الجلدية-النفسية-الأنف</td>
+                                                                    <td class="rot-med"><i class="fas fa-stethoscope rot-icon"></i> الباطنة</td>
+                                                                    <td class="rot-surg"><i class="fas fa-syringe rot-icon"></i> الجراحة</td>
+                                                                    <td class="rot-ped"><i class="fas fa-baby rot-icon"></i> الأطفال</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="note" style="margin-top: 0;">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        <div>
+                                                            <strong>ملاحظة:</strong> سيكون هناك امتحان جزئي في نهاية كل روته (الباطنة – الجراحة – الأطفال – الجلدية – النفسية – الأنف والأذن والحنجرة).
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- الروتة الشهرية -->
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-clock"></i> الروتة الشهرية (للجلدية والنفسية والأنف)</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>المجموعة</th>
+                                                                    <th>الشهر الأول</th>
+                                                                    <th>الشهر الثاني</th>
+                                                                    <th>الشهر الثالث</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <!-- D Group -->
+                                                                <tr><td colspan="4" style="background: #e2e8f0; color: #0c3b5e; text-align: right; font-weight: 800; font-size: 1.1rem;">المجموعة D (ديسمبر - فبراير)</td></tr>
+                                                                <tr><td>D1</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td></tr>
+                                                                <tr><td>D2</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td></tr>
+                                                                <tr><td>D3</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td></tr>
+                                                                
+                                                                <!-- C Group -->
+                                                                <tr><td colspan="4" style="background: #e2e8f0; color: #0c3b5e; text-align: right; font-weight: 800; font-size: 1.1rem;">المجموعة C (مارس - مايو)</td></tr>
+                                                                <tr><td>C1</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td></tr>
+                                                                <tr><td>C2</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td></tr>
+                                                                <tr><td>C3</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td></tr>
+
+                                                                <!-- B Group -->
+                                                                <tr><td colspan="4" style="background: #e2e8f0; color: #0c3b5e; text-align: right; font-weight: 800; font-size: 1.1rem;">المجموعة B (يونيو - أغسطس)</td></tr>
+                                                                <tr><td>B1</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td></tr>
+                                                                <tr><td>B2</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td></tr>
+                                                                <tr><td>B3</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td></tr>
+
+                                                                <!-- A Group -->
+                                                                <tr><td colspan="4" style="background: #e2e8f0; color: #0c3b5e; text-align: right; font-weight: 800; font-size: 1.1rem;">المجموعة A (سبتمبر - نوفمبر)</td></tr>
+                                                                <tr><td>A1</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td></tr>
+                                                                <tr><td>A2</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td></tr>
+                                                                <tr><td>A3</td><td class="rot-derma"><i class="fas fa-ear-listen rot-icon"></i> أنف وأذن</td><td class="rot-derma"><i class="fas fa-hand-dots rot-icon"></i> جلدية</td><td class="rot-derma"><i class="fas fa-brain rot-icon"></i> نفسية</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- امتحانات الدور الأول -->
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-check-circle"></i> الامتحانات النهائية - الدور الأول</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>الامتحان</th><th>اليوم</th><th>التاريخ</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><i class="fas fa-stethoscope rot-icon" style="color:#3b82f6;"></i> الباطنة</td><td>الورقة الأولى</td><td>الأربعاء</td><td>2028-01-12</td></tr>
+                                                                <tr><td><i class="fas fa-baby rot-icon" style="color:#f59e0b;"></i> الأطفال</td><td>الورقة الثانية</td><td>الخميس</td><td>2028-01-13</td></tr>
+                                                                <tr><td><i class="fas fa-syringe rot-icon" style="color:#10b981;"></i> الجراحة</td><td>الورقة</td><td>الخميس</td><td>2028-03-09</td></tr>
+                                                                <tr><td><i class="fas fa-hand-dots rot-icon" style="color:#8b5cf6;"></i> الجلدية</td><td>الورقة</td><td>الأربعاء</td><td>2028-04-05</td></tr>
+                                                                <tr><td><i class="fas fa-brain rot-icon" style="color:#8b5cf6;"></i> النفسية</td><td>الورقة</td><td>الخميس</td><td>2028-04-06</td></tr>
+                                                                <tr><td><i class="fas fa-ear-listen rot-icon" style="color:#8b5cf6;"></i> الأنف والأذن</td><td>الورقة</td><td>الأربعاء</td><td>2028-04-27</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- امتحانات الدور الثاني -->
+                                        <div class="accordion-item">
+                                            <button class="accordion-header exam-type-btn">
+                                                <span><i class="fas fa-redo-alt"></i> الامتحانات النهائية - الدور الثاني</span>
+                                                <i class="fas fa-chevron-down arrow-icon"></i>
+                                            </button>
+                                            <div class="accordion-content">
+                                                <div class="accordion-inner">
+                                                    <div class="table-wrap">
+                                                        <table>
+                                                            <thead><tr><th>المادة</th><th>الامتحان</th><th>اليوم</th><th>التاريخ</th></tr></thead>
+                                                            <tbody>
+                                                                <tr><td><i class="fas fa-stethoscope rot-icon" style="color:#3b82f6;"></i> الباطنة</td><td>الورقة الأولى</td><td>الأربعاء</td><td>2028-05-24</td></tr>
+                                                                <tr><td><i class="fas fa-baby rot-icon" style="color:#f59e0b;"></i> الأطفال</td><td>الورقة الثانية</td><td>الخميس</td><td>2028-05-25</td></tr>
+                                                                <tr><td><i class="fas fa-syringe rot-icon" style="color:#10b981;"></i> الجراحة</td><td>الورقة</td><td>الخميس</td><td>2028-06-08</td></tr>
+                                                                <tr><td><i class="fas fa-hand-dots rot-icon" style="color:#8b5cf6;"></i> الجلدية</td><td>الورقة</td><td>الخميس</td><td>2028-06-29</td></tr>
+                                                                <tr><td><i class="fas fa-brain rot-icon" style="color:#8b5cf6;"></i> النفسية</td><td>الورقة</td><td>الخميس</td><td>2028-07-13</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= سنة الامتياز ================= -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="header-title-wrap">
+                    <div class="phase-icon"><i class="fas fa-user-md"></i></div>
+                    <span>المرحلة الرابعة - سنة الامتياز</span>
+                </div>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <div class="note" style="background: #f0fdf4; color: #166534; border-right-color: #22c55e;">
+                        <i class="fas fa-graduation-cap" style="font-size: 1.8rem; color: #22c55e;"></i>
+                        <ul style="padding-right: 1.5rem; font-weight: 700; margin-top: 5px; font-size: 1.05rem; line-height: 2;">
+                            <li>سنة تدريبية كاملة بعد إتمام السنوات الست.</li>
+                            <li>يتم التدريب فيها في المستشفيات والمراكز الصحية المعتمدة.</li>
+                            <li>تُقيم فترة الامتياز من قبل الأقسام السريرية المعنية بناءً على تقارير الأداء والتدريب.</li>
+                            <li>يُمنح الطالب شهادة البكالوريوس في الطب والجراحة (MBBCh) بعد إتمام سنة الامتياز بنجاح.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const headers = document.querySelectorAll('.accordion-header');
+
+        headers.forEach(header => {
+            header.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                const content = this.nextElementSibling;
+                const isOpen = content.classList.contains('is-open');
+
+                // 1. إغلاق القوائم الشقيقة في نفس المستوى
+                const parentGroup = this.closest('.accordion-group');
+                if (parentGroup) {
+                    const siblings = parentGroup.querySelectorAll(':scope > .accordion-item');
+                    siblings.forEach(item => {
+                        const sHeader = item.querySelector(':scope > .accordion-header');
+                        const sContent = item.querySelector(':scope > .accordion-content');
+                        
+                        if (sHeader !== this && sContent.classList.contains('is-open')) {
+                            sHeader.classList.remove('active');
+                            sContent.classList.remove('is-open');
+                            
+                            // إغلاق المحتوى الداخلي للشقيق
+                            sContent.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+                            sContent.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('is-open'));
+                        }
+                    });
+                }
+
+                // 2. فتح أو إغلاق القائمة الحالية
+                if (isOpen) {
+                    this.classList.remove('active');
+                    content.classList.remove('is-open');
+                    
+                    content.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+                    content.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('is-open'));
+                } else {
+                    this.classList.add('active');
+                    content.classList.add('is-open');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
